@@ -1,5 +1,4 @@
 from django import forms
-
 from core.models import User
 
 
@@ -16,13 +15,22 @@ class RegisterForm(forms.Form):
 
         if password != confirm_password:
             raise forms.ValidationError("Passwords don't match")
+
+        return cleaned_data
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("Email already registered")
         return email
 
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("Username already taken")
+        return username
+
+
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
-

@@ -11,3 +11,6 @@ class FA(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(default=timezone.now)
+
+def __str__(self):
+        return f"FA for {self.user.username} - {self.code}"
