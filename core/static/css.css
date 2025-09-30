@@ -1,0 +1,176 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 10px;
+    accent-color: #00ff88;
+    cursor: pointer;
+}
+body {
+    background-color: #0f0f0f;
+    background-image: url('pexels-eberhardgross-1421903.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+
+.container {
+    display: flex;
+    gap: 140px;
+
+}
+    .messages {
+        list-style: none;
+        margin: 0;
+        padding: 10px;
+    }
+    .messages li {
+        background: #ffe5e5;
+        color: #a00;
+        padding: 10px;
+        border: 1px solid #a00;
+        margin-bottom: 10px;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .terms-link {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        font-size: 14px;
+        color: #333;
+        text-decoration: none;
+    }
+
+    .terms-link:hover {
+        text-decoration: underline;
+    }
+.form-box {
+    background-color: #1a1a1a;
+    padding: 120px 60px;
+    border-radius: 12px;
+    width: 450px;
+    height: 800px;
+    box-shadow: 0 0 20px lightcyan;
+    transition: transform 0.4s ease;
+}
+
+
+.form-box:hover {
+    transform: scale(1.03);
+    box-shadow: 2px 2px 30px white;
+    background-color: rgba(26,26,26,0.4);
+    transition: 0.5s;
+}
+.login-box {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 100px 40px;
+    border-radius: 12px;
+    width: 350px;
+    height: 400px;
+    box-shadow: 0 0 20px lightcyan;
+    transition: transform 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.login-box:hover {
+    transform: scale(1.03);
+    box-shadow: 2px 2px 30px white;
+    background-color: rgba(26, 26, 26, 0.4);
+    transition: transform 0.4s ease;
+}
+
+
+.form-box h2 {
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+}
+
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+    transform: scale(1.03);
+}
+a {
+    text-transform: capitalize;
+    color: white;
+    padding: 10px;
+    display: inline-block;
+    height: auto;
+}
+a:hover{
+    transform: scale(1.05);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffffff;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:active{
+
+}
+
+button:hover {
+    color: aquamarine;
+    background-color: black;
+    transform: scale(1.05);
+}
+p {
+    margin-bottom: 15px;
+    color: white;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: white;
+}

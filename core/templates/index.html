@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="{% static 'css.css' %}">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<div class="container">
+    <div class="form-box" id="register">
+        <h2>Register</h2>
+        <form method="POST" action="/register/">
+            {% csrf_token %}
+            {{ register_form.non_field_errors }}
+            {{ register_form.as_p }}
+            {{ register_form.confirm_password.errors }}
+            <div class="g-recaptcha" data-sitekey="6LeTq9crAAAAAIWCY7bxqcLayd5bBg9zqig27nwN"></div>
+
+
+            <label for="terms" class="checkbox-label">
+                <input id="terms" type="checkbox" name="terms" required />
+                I have read and agree to the terms.
+            </label>
+
+            <button type="submit" id="registerBtn">Register</button>
+        </form>
+    </div>
+
+
+    <div class="login-box" id="login">
+        <h2>Login</h2>
+        <form method="POST" action="/login/">
+            {% csrf_token %}
+            {{ login_form.as_p }}
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</div>
+
+<a class="terms-link" href="https://fwaeh.cloud/terms" target="_blank">Read our terms here</a>
+</body>
+</html>
