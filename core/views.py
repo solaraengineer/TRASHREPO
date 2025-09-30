@@ -20,6 +20,7 @@ def home(request):
         'recaptcha_secret_key': settings.RECAPTCHA_SECRET_KEY,
     })
 
+
 # Register view
 @ratelimit(key='ip', rate='5/m', block=True)
 def register(request):
@@ -74,20 +75,18 @@ def register(request):
         else:
             messages.error(request, "Form is invalid. Please check your data.")
 
+            return render(request, "index.html", {
+                "register_form": form,
+                "login_form": LoginForm(),
+                "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY,
+            })
 
-    return render(request, "index.html", {
-        "register_form": RegisterForm(),
-        "login_form": LoginForm(),
-        "recaptcha_site_key": settings.RECAPTCHA_SITE_KEY,
-    })
-# 2FA verification
 def register2(request):
     reg_data = request.session.get('data')
 
     if not reg_data:
         messages.error(request, "Session expired. Try registering again.")
         return redirect("/")
-
     if request.method == 'POST':
         input_code = request.POST.get('code', '').strip()
         correct_code = reg_data.get("verification_code")
