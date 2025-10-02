@@ -1,5 +1,7 @@
+import logging
 import random
 import requests
+from django.http import BadHeaderError
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -11,7 +13,26 @@ from django_ratelimit.decorators import ratelimit
 from core.forms import RegisterForm, LoginForm
 from core.models import User, FA
 
-# Home page
+
+
+
+def send_codee(user, code=None):
+    if not code:
+        code = str(random.randint(100000, 999999))
+    FA.objects.filter(user=user).delete()
+    FA.objects.create(user=user, code=code)
+    try:
+        send_mail(
+            'Your 2FA Code',
+            f'Your 2FA code is: {code}',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False
+        )
+    except Exception as e:
+        logging.error(e)
+    return code
+
 def home(request):
     return render(request, 'index.html', {
         'register_form': RegisterForm(),
@@ -21,7 +42,28 @@ def home(request):
     })
 
 
-# Register view
+@ratelimit(key='ip', rate='5/m', block=True)
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            user = User.objects.filter(email=email).first()
+
+            if user and user.check_password(password):
+                code = send_codee(user)
+                messages.info(request, "2FA code sent to your email.")
+                return render(request, "FA.html", {})
+            else:
+                messages.error(request, "Invalid login credentials.")
+                return render(request, "index.html", {
+        'register_form': RegisterForm(),
+        'login_form': LoginForm(),
+        'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY,
+         })
+
 @ratelimit(key='ip', rate='5/m', block=True)
 def register(request):
     if request.method == 'POST':
@@ -83,7 +125,6 @@ def register(request):
 
 def register2(request):
     reg_data = request.session.get('data')
-
     if not reg_data:
         messages.error(request, "Session expired. Try registering again.")
         return redirect("/")
@@ -96,19 +137,16 @@ def register2(request):
                 if User.objects.filter(email=reg_data["email"]).exists():
                     messages.error(request, "Email already exists.")
                     return redirect("/")
-
                 user = User(
                     username=reg_data["username"],
                     email=reg_data["email"],
                 )
                 user.set_password(reg_data["password"])
                 user.save()
-
-
                 request.session.pop('data', None)
-
                 messages.success(request, "Registration complete. Welcome!")
                 return redirect("/dash")
+
             except Exception as e:
                 print("User creation error:", e)
                 messages.error(request, "Something went wrong. Try again.")
