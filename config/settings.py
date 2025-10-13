@@ -50,11 +50,6 @@ EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = "noreply@fwaeh.cloud"
 
-print("RECAPTCHA_SITE_KEY =", RECAPTCHA_SITE_KEY)
-print("RECAPTCHA_SECRET_KEY =", RECAPTCHA_SECRET_KEY)
-
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
