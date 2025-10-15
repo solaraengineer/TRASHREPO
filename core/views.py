@@ -59,7 +59,7 @@ def get_tokens_for_user(user):
     }
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
+@method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -117,7 +117,7 @@ class RegisterAPIView(APIView):
         return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
+@method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class RegisterVerifyAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -145,7 +145,7 @@ class RegisterVerifyAPIView(APIView):
             return Response({'error': 'User creation failed.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
+@method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -167,7 +167,7 @@ class LoginAPIView(APIView):
         return Response({'message': '2FA code sent to email.'}, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
+@method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class LoginVerifyAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -192,11 +192,10 @@ class LoginVerifyAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
-@ratelimit(key='ip', rate='5/m', block=True)
+@method_decorator(ratelimit(key='ip', rate='5/m', block=True), name='dispatch')
 class UserFetchAPIView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request):
         user = request.user
