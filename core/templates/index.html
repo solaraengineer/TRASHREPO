@@ -17,7 +17,9 @@
             <input type="text" id="regUsername" placeholder="Username" required />
             <input type="email" id="regEmail" placeholder="Email" required />
             <input type="password" id="regPassword" placeholder="Password" required />
-            <div class="g-recaptcha" data-sitekey="6LeTq9crAAAAAIWCY7bxqcLayd5bBg9zqig27nwN"></div>
+            <div class="g-recaptcha"
+              data-sitekey="6LeTq9crAAAAAIWCY7bxqcLayd5bBg9zqig27nwN"
+              name="g-recaptcha-response"></div>
 
             <label for="terms" class="checkbox-label">
                 <input id="terms" type="checkbox" required />
@@ -42,6 +44,6 @@
 
 <a class="terms-link" href="https://fwaeh.cloud/terms" target="_blank">Read our terms here</a>
 
-<script src="{% static 'js/APIregister .js' %}"></script>
+<script src="{% static 'js/APIregister.js' %}"></script>
 </body>
 </html>

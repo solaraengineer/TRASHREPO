@@ -5,6 +5,15 @@
     <title>Dashboard</title>
 </head>
 <body>
-<script src="{% static 'js/APIdata.js' %}"></script>
+
+    <h1>Welcome to Your Dashboard</h1>
+
+    <div class="user-info" id="userBox">
+        <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+        <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+        <p><strong>ID:</strong> <span id="userId">Loading...</span></p>
+    </div>
+
+    <script src="{% static 'js/APIdata.js' %}"></script>
 </body>
 </html>
