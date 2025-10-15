@@ -1,32 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2FA Verification</title>
-    <link rel="stylesheet" href="{% static 'css.css' %}">
-</head>
-<body>
+<div class="form-box">
+  <h2>Enter Your Verification Code</h2>
+  <label for="code">Verification Code</label>
+  <input type="text" id="code" name="code" required>
+  <button onclick="submitCode()">Verify</button>
+</div>
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <div class="form-box">
-        <h2>Enter Your Verification Code</h2>
-        <form method="POST" action="">
-            {% csrf_token %}
-            <label for="code">Verification Code</label>
-            <input type="text" id="code" name="code" required>
-
-            <button type="submit">Verify</button>
-        </form>
-    </div>
-
-</body>
-</html>
+<script src="{% static 'js/APIverify.js' %}"></script>
