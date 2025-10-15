@@ -9,7 +9,7 @@ A production-ready Django web application with API authentication, session handl
 - **Backend:** Python 3.11+ · Django
 - **Frontend:** HTML · CSS · JavaScript (Vanilla)
 - **Authentication:** JWT (Access/Refresh Tokens), 2FA Email Verification
-- **Database:** SQLite (development), PostgreSQL-ready
+- **Database:** PostgreSQL
 - **Hosting:** AWS EC2 + Cloudflare (DNS / CDN / SSL)
 - **Security:** reCAPTCHA v2 · JWT-based Auth · Session Cookies
 - **File Serving:** Static HTML via R2 / Cloudflare · Django API backend
@@ -65,7 +65,6 @@ python manage.py runserver
 ⸻
 🔧 Customization
 	•	Want to store more user data? Extend models.User.
-	•	Replace SQLite with PostgreSQL for production.
 	•	Swap out email for phone/SMS verification if needed.
 	•	Add more endpoints for Paragraph or custom features.
 
