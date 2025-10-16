@@ -5,7 +5,7 @@
 
             const recaptchaToken = grecaptcha.getResponse();
             if (!recaptchaToken) {
-                document.getElementById('regMessage').textContent = "⚠️ Please complete the reCAPTCHA before submitting.";
+                document.getElementById('regMessage').textContent = " Please complete the reCAPTCHA before submitting.";
                 return;
             }
 
@@ -16,7 +16,7 @@
             console.log(" Submitting registration...");
 
             try {
-                const res = await fetch('http://127.0.0.1:8100/api/register/', {
+                const res = await fetch('http://127.0.0.1:8000/api/register/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -32,6 +32,7 @@
                 if (!res.ok) {
                     console.error("HTTP error:", res.status);
                 }
+
 
                 const data = await res.json();
                 console.log("Response:", data);

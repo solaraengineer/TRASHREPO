@@ -15,8 +15,10 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
-load_dotenv()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
+load_dotenv()
 
 AUTH_USER_MODEL = 'core.User'
 
@@ -88,7 +90,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    )
 }
 
 CORS_ALLOWED_ORIGINS = [

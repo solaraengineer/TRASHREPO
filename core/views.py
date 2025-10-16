@@ -14,9 +14,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import  authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+import inspect
+
 from core.serializers import (
     RegisterSerializer,
     RegisterVerifySerializer,
@@ -59,7 +61,6 @@ def get_tokens_for_user(user):
     }
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -79,7 +80,6 @@ class RegisterAPIView(APIView):
             'secret': settings.RECAPTCHA_SECRET_KEY,
             'response': recaptcha_token,
         }
-
         try:
             res = requests.post(verify_url, data=payload, timeout=5)
             recaptcha_data = res.json()
@@ -117,10 +117,8 @@ class RegisterAPIView(APIView):
         return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
 class RegisterVerifyAPIView(APIView):
     permission_classes = [AllowAny]
-
     def post(self, request):
         serializer = RegisterVerifySerializer(data=request.data)
         if not serializer.is_valid():
@@ -145,7 +143,6 @@ class RegisterVerifyAPIView(APIView):
             return Response({'error': 'User creation failed.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -167,7 +164,6 @@ class LoginAPIView(APIView):
         return Response({'message': '2FA code sent to email.'}, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
-@ratelimit(key='ip', rate='5/m', block=True)
 class LoginVerifyAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -194,7 +190,6 @@ class LoginVerifyAPIView(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
-@ratelimit(key='ip', rate='5/m', block=True)
 class UserFetchAPIView(APIView):
     permission_classes = [AllowAny]
 
@@ -207,3 +202,4 @@ class UserFetchAPIView(APIView):
             "is_staff": user.is_staff,
             "date_joined": str(user.date_joined),
         })
+
