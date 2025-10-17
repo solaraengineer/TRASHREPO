@@ -6,11 +6,14 @@ from django.utils import timezone
 class User(AbstractUser):
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
+    AboutMe = models.TextField(max_length=500)
+
     pass
 class FA(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(default=timezone.now)
+
 
 class PendingRegistration(models.Model):
     email = models.EmailField(unique=True)

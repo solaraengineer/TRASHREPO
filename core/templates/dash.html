@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>Dashboard</title>
 </head>
@@ -12,6 +13,7 @@
         <p><strong>Username:</strong> <span id="username">Loading...</span></p>
         <p><strong>Email:</strong> <span id="email">Loading...</span></p>
         <p><strong>ID:</strong> <span id="userId">Loading...</span></p>
+        <p><strong>date:</strong> <span id="date">Loading...</span></p>
     </div>
 
     <script src="{% static 'js/APIdata.js' %}"></script>

@@ -1,6 +1,6 @@
 const token = localStorage.getItem('accessToken');
 
-fetch('/api/user/', {
+fetch('https://fwwaeh.cloud/api/user/', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
@@ -12,6 +12,7 @@ fetch('/api/user/', {
     document.getElementById('username').textContent = data.username;
     document.getElementById('email').textContent = data.email;
     document.getElementById('userId').textContent = data.id;
+
   })
   .catch(err => {
     console.error("Failed to fetch user:", err);

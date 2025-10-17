@@ -17,6 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import  authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
+from django.views import View
 import inspect
 
 from core.serializers import (
@@ -26,22 +27,6 @@ from core.serializers import (
     LoginVerifySerializer
 )
 
-def send_codee(user, code=None):
-    if not code:
-        code = str(random.randint(100000, 999999))
-    FA.objects.filter(user=user).delete()
-    FA.objects.create(user=user, code=code)
-    try:
-        send_mail(
-            'Your 2FA Code',
-            f'Your 2FA code is: {code}',
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False
-        )
-    except Exception as e:
-        logging.error(e)
-    return code
 
 def home(request):
     return render(request, 'index.html', {
@@ -49,9 +34,13 @@ def home(request):
         'login_form': LoginForm(),
         'recaptcha_site_key': settings.RECAPTCHA_SITE_KEY,
     })
+class fa_view(View):
+    def get(self, request):
+       return render(request, 'fa.html', {})
 
-def fa_view(request):
-    return render(request, 'FA.html')
+class dash(View):
+    def get(self, request):
+        return render(request, 'dash.html')
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -73,6 +62,7 @@ class RegisterAPIView(APIView):
         username = data['username']
         email = data['email']
         password = data['password']
+        bio = data['bio']
         recaptcha_token = data['recaptcha']
 
         verify_url = "https://www.google.com/recaptcha/api/siteverify"
@@ -92,55 +82,11 @@ class RegisterAPIView(APIView):
         if User.objects.filter(email=email).exists():
             return Response({'error': 'Email already registered'}, status=status.HTTP_409_CONFLICT)
 
-        verification_code = str(random.randint(10000, 99999))
+        user = User(email=email, username=username)
+        user.set_password(password)
+        user.save()
 
-        PendingRegistration.objects.filter(email=email).delete()
-        PendingRegistration.objects.create(
-            username=username,
-            email=email,
-            password=password,
-            verification_code=verification_code
-        )
-
-        try:
-            send_mail(
-                'Verification Code',
-                f'Your Verification Code: {verification_code}',
-                settings.DEFAULT_FROM_EMAIL,
-                [email],
-                fail_silently=False,
-            )
-        except Exception as e:
-            logging.error(e)
-            return Response({'error': 'Could not send verification email'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({'message': 'Verification code sent'}, status=status.HTTP_200_OK)
-
-@method_decorator(csrf_exempt, name='dispatch')
-class RegisterVerifyAPIView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        serializer = RegisterVerifySerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-        input_code = serializer.validated_data['code']
-        pending = PendingRegistration.objects.filter(verification_code=input_code).first()
-        if not pending:
-            return Response({'error': 'Invalid or expired code'}, status=status.HTTP_403_FORBIDDEN)
-
-        if User.objects.filter(email=pending.email).exists():
-            return Response({'error': 'Email already exists.'}, status=status.HTTP_409_CONFLICT)
-
-        try:
-            user = User(username=pending.username, email=pending.email)
-            user.set_password(pending.password)
-            user.save()
-            pending.delete()
-            return Response({'message': 'Registration complete.'}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            logging.error(e)
-            return Response({'error': 'User creation failed.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
 
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginAPIView(APIView):
@@ -158,40 +104,14 @@ class LoginAPIView(APIView):
         if not user or not user.check_password(password):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        send_codee(user)
-        FA.objects.filter(user=user).delete()
-        FA.objects.create(user=user, code=send_codee(user))
-        return Response({'message': '2FA code sent to email.'}, status=status.HTTP_200_OK)
-
-@method_decorator(csrf_exempt, name='dispatch')
-class LoginVerifyAPIView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serializer = LoginVerifySerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-        code = serializer.validated_data['code']
-        fa = FA.objects.filter(code=code).first()
-        if not fa:
-            return Response({'error': 'Invalid 2FA code.'}, status=status.HTTP_403_FORBIDDEN)
-
-        user = fa.user
-        FA.objects.filter(user=user).delete()
         tokens = get_tokens_for_user(user)
+        return Response(tokens, status=status.HTTP_200_OK)
 
-        return Response({
-            'message': 'Login successful.',
-            'access': tokens['access'],
-            'refresh': tokens['refresh']
-        }, status=status.HTTP_200_OK)
 
 @method_decorator(csrf_exempt, name='dispatch')
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
 class UserFetchAPIView(APIView):
-    permission_classes = [AllowAny]
 
     def get(self, request):
         user = request.user
@@ -201,5 +121,5 @@ class UserFetchAPIView(APIView):
             "id": user.id,
             "is_staff": user.is_staff,
             "date_joined": str(user.date_joined),
+            "bio": user.bio,
         })
-
