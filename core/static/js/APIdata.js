@@ -1,6 +1,6 @@
 const token = localStorage.getItem('accessToken');
 
-fetch('https://fwaeh.cloud/api/user/', {
+fetch('http://127.0.0.1:8000/api/user/', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',

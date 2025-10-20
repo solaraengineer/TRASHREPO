@@ -59,18 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password})
             });
 
             const data = await res.json();
 
-            if (data.message === "2FA code sent to email.") {
-                document.getElementById('loginMessage').textContent = "Check your email for a 2FA code.";
-                window.location.href = "/dash";
-            } else {
-                document.getElementById('loginMessage').textContent =
-                    data.error || 'Login failed.';
-            }
+            if (data.access) {
+    window.location.href = "https://bitearthcoin.com/dash";
+     } else {
+    document.getElementById('loginMessage').textContent = data.error || 'Login failed.';
+    }
 
         } catch (error) {
             console.error("Login fetch failed:", error);

@@ -62,7 +62,6 @@ class RegisterAPIView(APIView):
         username = data['username']
         email = data['email']
         password = data['password']
-        bio = data['bio']
         recaptcha_token = data['recaptcha']
 
         verify_url = "https://www.google.com/recaptcha/api/siteverify"
@@ -121,5 +120,4 @@ class UserFetchAPIView(APIView):
             "id": user.id,
             "is_staff": user.is_staff,
             "date_joined": str(user.date_joined),
-            "bio": user.bio,
         })

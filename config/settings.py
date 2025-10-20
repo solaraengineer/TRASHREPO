@@ -71,7 +71,7 @@ DATABASES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['fwaeh.cloud', 'bitearthcoin.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -95,7 +95,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "https://fwaeh.cloud",
-    "https://your-cloudflare-html-site.com",
+    "https://bitearthcoin.com",
 ]
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

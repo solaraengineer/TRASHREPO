@@ -14,6 +14,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/login/', LoginAPIView.as_view(), name='LoginAPIView'),
     path('api/user/', UserFetchAPIView.as_view(), name='UserFetchAPIView'),
-    path('dash/', dash.as_view(), name='Dashboard'),
-
+    path('dash/', dash.as_view(), name='dash'),
 ]
